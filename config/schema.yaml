@@ -1,0 +1,9 @@
+columns:
+    N: { dtype: int, min: 0 }
+    P: { dtype: int, min: 0 }
+    K: { dtype: int, min: 0 }
+    temperature: { dtype: float, min: -50, max: 60 }
+    humidity: { dtype: float, min: 0, max: 100 }
+    ph: { dtype: float, min: 0, max: 14 }
+    rainfall: { dtype: float, min: 0 }
+    label: { dtype: str }
