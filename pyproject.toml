@@ -7,7 +7,11 @@ authors = [
     { name = "webew", email = "fillion.bertrand@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pandas>=3.1.0",
+    "pyyaml>=6.0.3",
+    "scikit-learn>=1.9.1",
+]
 
 [project.scripts]
 crop-recommendation-tp = "crop_recommendation_tp:main"
