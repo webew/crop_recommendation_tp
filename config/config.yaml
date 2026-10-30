@@ -1,0 +1,7 @@
+dataset:
+    path: data/raw/Crop_recommendation.csv
+    target: label
+    features: [N, P, K, temperature, humidity, ph, rainfall]
+split:
+    test_size: 0.2
+    random_seed: 42
