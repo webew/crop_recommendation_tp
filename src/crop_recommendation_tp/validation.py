@@ -33,7 +33,7 @@ def validate(df: pd.DataFrame, schema: dict) -> list[str]:
             n = (df[name] > rules["max"]).sum()
             if n:
                 errors.append(f"{name} : {n} valeur(s) > {rules['max']}")
-        extra = set(df.columns) - set(schema["columns"])
+    extra = set(df.columns) - set(schema["columns"])
     if extra:
         errors.append(f"Colonnes non déclarées dans le schéma : {sorted(extra)}")
     return errors
