@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "dvc>=3.67.1",
+    "mlflow>=3.17.2",
     "pandas>=3.1.0",
     "pyyaml>=6.0.3",
     "scikit-learn>=1.9.1",
@@ -20,3 +21,8 @@ crop-recommendation-tp = "crop_recommendation_tp:main"
 [build-system]
 requires = ["uv_build>=0.11.29,<0.12.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.6.5",
+]
