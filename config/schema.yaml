@@ -6,4 +6,30 @@ columns:
     humidity: { dtype: float, min: 0, max: 100 }
     ph: { dtype: float, min: 0, max: 14 }
     rainfall: { dtype: float, min: 0 }
-    label: { dtype: str }
+    label:
+        dtype: str
+        allowed:
+            [
+                apple,
+                banana,
+                blackgram,
+                chickpea,
+                coconut,
+                coffee,
+                cotton,
+                grapes,
+                jute,
+                kidneybeans,
+                lentil,
+                maize,
+                mango,
+                mothbeans,
+                mungbean,
+                muskmelon,
+                orange,
+                papaya,
+                pigeonpeas,
+                pomegranate,
+                rice,
+                watermelon,
+            ]
