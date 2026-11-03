@@ -6,10 +6,11 @@ from crop_recommendation_tp.validation import validate
 
 # Découverte : uv run pytest parcourt le projet et repère les fichiers nommés test_*.py, ici tests/test_validation.py.
 # Collecte : dans ces fichiers, pytest retient les fonctions dont le nom commence par test_. Un autre nom (par exemple verifier_donnees) serait ignoré.
-# Préparation : pour chaque test, pytest lit les noms des paramètres (df, schema). Il cherche une fixture portant le même nom, l’exécute et récupère son résultat. Les deux fixtures ci-dessus fournissent donc le tableau et le schéma.
-# Exécution : pytest appelle test_donnees_conformes(df=..., schema=...). Le test réussit si l’assert est vrai, et échoue avec le détail de la différence sinon.
+# Préparation : pour chaque test, pytest lit les noms des paramètres (df, schema). Il cherche une fixture portant le même nom, l'exécute et récupère son résultat. Les deux fixtures ci-dessus fournissent donc le tableau et le schéma.
+# Exécution : pytest appelle test_donnees_conformes(df=..., schema=...). Le test réussit si l'assert est vrai, et échoue avec le détail de la différence sinon.
 
-# Les fixtures df et schema sont réutilisables : les prochains tests du même fichier les recevront de la même façon, avec un tableau neuf à chaque fois (une modification dans un test n’affecte pas les autres).
+# Les fixtures df et schema sont réutilisables : les prochains tests du même fichier les recevront de la même façon, avec un tableau neuf à chaque fois (une modification dans un test n'affecte pas les autres).
+
 
 @pytest.fixture
 def schema():
@@ -35,8 +36,8 @@ def df():
 
 def test_donnees_conformes(df, schema):
     assert validate(df, schema) == []
-    
-    
+
+
 def test_colonne_absente(df, schema):
     erreurs = validate(df.drop(columns=["ph"]), schema)
     assert erreurs == ["Colonne absente : ph"]
@@ -52,8 +53,8 @@ def test_valeur_manquante_et_valeur_hors_bornes(df, schema):
     df.loc[1, "N"] = -5
     erreurs = validate(df, schema)
     assert erreurs == ["N : 1 valeur(s) manquante(s)", "N : 1 valeur(s) < 0"]
-    
-    
+
+
 def test_culture_inconnue(df, schema):
     df.loc[0, "label"] = "ricee"
     assert validate(df, schema) == ["label : valeurs non autorisées ['ricee']"]
@@ -77,4 +78,3 @@ def test_entiers_acceptes_pour_un_float(df, schema):
 def test_booleens_refuses_pour_un_float(df, schema):
     df["ph"] = [True, False]
     assert validate(df, schema) == ["ph : type bool, attendu float"]
-    

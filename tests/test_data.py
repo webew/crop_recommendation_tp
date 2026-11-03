@@ -36,7 +36,7 @@ def test_variables_sans_la_cible(config):
 
 
 def test_decoupage_taille_et_stratification(df, config):
-    X_train, X_test, y_train, y_test = split_dataset(df, config)
+    X_train, X_test, _y_train, y_test = split_dataset(df, config)
     assert len(X_train) == 16
     assert len(X_test) == 4
     assert y_test.value_counts().to_dict() == {"rice": 2, "apple": 2}

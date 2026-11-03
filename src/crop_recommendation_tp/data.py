@@ -1,10 +1,10 @@
 import hashlib
+
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 from crop_recommendation_tp.config import ROOT, load_yaml
 from crop_recommendation_tp.validation import validate
-
-from sklearn.model_selection import train_test_split
 
 
 def load_dataset(config: dict) -> pd.DataFrame:
@@ -15,6 +15,7 @@ def load_dataset(config: dict) -> pd.DataFrame:
     if errors:
         raise ValueError("Données non conformes au schéma :\n" + "\n".join(errors))
     return df
+
 
 def get_features(config: dict) -> list[str]:
     """Retourne les variables explicatives : colonnes du schéma, cible exclue."""
@@ -32,6 +33,8 @@ def split_dataset(df: pd.DataFrame, config: dict):
         random_state=config["split"]["random_seed"],
         stratify=y,
     )
+
+
 def get_data_version(config: dict) -> str:
     """Retourne l'empreinte md5 du fichier de données utilisé.
 

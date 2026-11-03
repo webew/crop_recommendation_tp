@@ -1,16 +1,16 @@
+import matplotlib
 import mlflow
 
 from crop_recommendation_tp.config import ROOT, load_yaml
 from crop_recommendation_tp.data import get_data_version
 
-import matplotlib
 matplotlib.use("Agg")  # rendu sans fenêtre, utilisable dans un script ou en CI
-import matplotlib.pyplot as plt
-from sklearn.metrics import ConfusionMatrixDisplay, classification_report
-
 import subprocess
 
+import matplotlib.pyplot as plt
 from mlflow.models import infer_signature
+from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+
 
 def setup_mlflow(config: dict) -> None:
     """Connecte MLflow à la base et à l'expérience déclarées dans config.yaml."""
@@ -20,6 +20,7 @@ def setup_mlflow(config: dict) -> None:
         uri = "sqlite:///" + (ROOT / uri.removeprefix("sqlite:///")).as_posix()
     mlflow.set_tracking_uri(uri)
     mlflow.set_experiment(config["mlflow"]["experiment_name"])
+
 
 def get_git_commit() -> str:
     """Retourne le commit courant, suffixé par -dirty si des modifications ne sont pas enregistrées."""
@@ -31,11 +32,23 @@ def get_git_commit() -> str:
         return result.stdout.strip()
 
     try:
-        return git("rev-parse", "HEAD") + ("-dirty" if git("status", "--porcelain") else "")
+        return git("rev-parse", "HEAD") + (
+            "-dirty" if git("status", "--porcelain") else ""
+        )
     except (OSError, subprocess.CalledProcessError):
         return "inconnu"
 
-def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_test, y_test, tags: dict | None = None) -> str:
+
+def log_run(
+    run_name: str,
+    config: dict,
+    model,
+    metrics: dict,
+    predictions,
+    X_test,
+    y_test,
+    tags: dict | None = None,
+) -> str:
     """Enregistre un run (paramètres, métriques, modèle) et retourne son identifiant."""
     setup_mlflow(config)
     params = {**model.get_params(), "test_size": config["split"]["test_size"]}
@@ -63,9 +76,11 @@ def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_te
         plt.close(fig)
     return run.info.run_id
 
+
 def trace_tags(config: dict) -> dict:
     """Étiquettes qui relient un run à la version des données et au commit du code."""
     return {"data_md5": get_data_version(config), "git_commit": get_git_commit()}
+
 
 def log_tuning(search, config: dict) -> str:
     """Enregistre une recherche : un run parent et un run enfant par combinaison."""
@@ -75,7 +90,9 @@ def log_tuning(search, config: dict) -> str:
     results = search.cv_results_
     with mlflow.start_run(run_name="tuning") as parent:
         mlflow.set_tags(trace_tags(config))
-        mlflow.log_params({"cv_folds": tuning["cv_folds"], "scoring": tuning["scoring"]})
+        mlflow.log_params(
+            {"cv_folds": tuning["cv_folds"], "scoring": tuning["scoring"]}
+        )
         for i, params in enumerate(results["params"]):
             with mlflow.start_run(run_name=f"cv_{i}", nested=True):
                 mlflow.log_params(params)
