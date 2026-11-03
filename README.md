@@ -109,7 +109,15 @@ Workflow d'expérimentation :
 
 La commande `train` se relance quand les données (fichier `.dvc`), les paramètres ou le code changent. Chaque run enregistre la version des données (`data_md5`) et celle du code (`git_commit`).
 
-## 7. Structure du projet
+## 7. Tests
+
+```bash
+uv run pytest
+```
+
+Les tests (dossier `tests/`) vérifient la validation des données et le découpage. Ils utilisent de petits tableaux fabriqués et s'exécutent sans le fichier de données.
+
+## 8. Structure du projet
 
 | Élément | Rôle |
 |---|---|
@@ -120,7 +128,7 @@ La commande `train` se relance quand les données (fichier `.dvc`), les paramèt
 | `src/crop_recommendation_tp/` | Code du projet (validation des données) |
 | `.dvc/` | Configuration de DVC et cache local |
 
-## 8. Commandes utiles
+## 9. Commandes utiles
 
 | Commande | Effet |
 |---|---|
@@ -131,7 +139,7 @@ La commande `train` se relance quand les données (fichier `.dvc`), les paramèt
 | `uv run dvc status` | Comparer les données au fichier `.dvc` |
 | `git status --short` | Lister les fichiers modifiés |
 
-## 9. Résolution de problèmes
+## 10. Résolution de problèmes
 
 | Message | Cause | Solution |
 |---|---|---|
