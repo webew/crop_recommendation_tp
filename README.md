@@ -148,3 +148,19 @@ Les tests (dossier `tests/`) vérifient la validation des données et le découp
 | Noyau introuvable dans VS Code | Environnement `.venv` non sélectionné | Lancer `uv sync`, puis sélectionner le noyau `.venv` |
 | `UntrustedTypesFoundException` à l'enregistrement du modèle | MLflow enregistre les modèles scikit-learn au format skops, qui exige la liste des types autorisés | Passer `skops_trusted_types=["sklearn.tree._tree.Tree"]` à `mlflow.sklearn.log_model` |
 | `LF will be replaced by CRLF` | Conversion des fins de ligne par Git sous Windows | Information sans conséquence |
+
+## Intégration continue
+
+Le workflow `.github/workflows/ci.yml` s'exécute à chaque `push` et `pull_request`.
+Il installe l'environnement (`uv sync --locked`), puis lance :
+
+```bash
+uv run ruff check .
+uv run ruff format --check .
+uv run pytest
+```
+
+Avant chaque commit, exécuter ces trois commandes en local.
+`uv run ruff check . --fix` et `uv run ruff format .` corrigent automatiquement la plupart des écarts.
+
+Les numéros de version des actions (`actions/checkout`, `astral-sh/setup-uv`) se vérifient sur la page GitHub de chaque action.
