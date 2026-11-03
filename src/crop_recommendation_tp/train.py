@@ -30,5 +30,5 @@ def main() -> None:
     X_train, X_test, y_train, y_test = split_dataset(load_dataset(config), config)
     model = train_model(X_train, y_train, config)
     predictions, metrics = evaluate(model, X_test, y_test)
-    run_id = log_run("train", config, model, metrics, predictions, y_test)
+    run_id = log_run("train", config, model, metrics, predictions, X_test, y_test)
     print(f"Run {run_id} enregistré : {metrics}")

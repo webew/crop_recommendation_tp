@@ -1,3 +1,4 @@
+import hashlib
 import pandas as pd
 
 from crop_recommendation_tp.config import ROOT, load_yaml
@@ -32,6 +33,11 @@ def split_dataset(df: pd.DataFrame, config: dict):
         stratify=y,
     )
 def get_data_version(config: dict) -> str:
-    """Retourne l'empreinte md5 du fichier de données, lue dans son fichier .dvc."""
+    """Retourne l'empreinte md5 du fichier de données utilisé.
+
+    Le suffixe -modified signale un fichier différent de celui enregistré dans le .dvc.
+    """
     dvc_file = load_yaml(config["dataset"]["path"] + ".dvc")
-    return dvc_file["outs"][0]["md5"]
+    expected = dvc_file["outs"][0]["md5"]
+    actual = hashlib.md5((ROOT / config["dataset"]["path"]).read_bytes()).hexdigest()
+    return actual if actual == expected else actual + "-modified"

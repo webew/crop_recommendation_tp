@@ -10,6 +10,8 @@ from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 
 import subprocess
 
+from mlflow.models import infer_signature
+
 def setup_mlflow(config: dict) -> None:
     """Connecte MLflow à la base et à l'expérience déclarées dans config.yaml."""
     uri = config["mlflow"]["tracking_uri"]
@@ -33,10 +35,14 @@ def get_git_commit() -> str:
     except (OSError, subprocess.CalledProcessError):
         return "inconnu"
 
-def log_run(run_name: str, config: dict, model, metrics: dict, predictions, y_test) -> str:
+def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_test, y_test) -> str:
     """Enregistre un run (paramètres, métriques, modèle) et retourne son identifiant."""
     setup_mlflow(config)
-    params = {**config["model"]["params"], "random_state": config["split"]["random_seed"]}
+    params = {
+        **config["model"]["params"],
+        "random_state": config["split"]["random_seed"],
+        "test_size": config["split"]["test_size"],
+    }
     with mlflow.start_run(run_name=run_name) as run:
         mlflow.log_params(params)
         mlflow.set_tag("data_md5", get_data_version(config))
@@ -47,6 +53,8 @@ def log_run(run_name: str, config: dict, model, metrics: dict, predictions, y_te
         mlflow.sklearn.log_model(
             model,
             name="model",
+            signature=infer_signature(X_test.astype("float64"), predictions),
+            input_example=X_test.head().astype("float64"),
             skops_trusted_types=["sklearn.tree._tree.Tree"],
         )
         mlflow.log_text(
