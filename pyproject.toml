@@ -1,7 +1,7 @@
 [project]
 name = "crop-recommendation-tp"
 version = "0.1.0"
-description = "Add your description here"
+description = "Recommandation de cultures : démarche MLOps avec uv, DVC et MLflow"
 readme = "README.md"
 authors = [
     { name = "webew", email = "fillion.bertrand@gmail.com" }
@@ -17,7 +17,6 @@ dependencies = [
 ]
 
 [project.scripts]
-crop-recommendation-tp = "crop_recommendation_tp:main"
 train = "crop_recommendation_tp.train:main"
 tune = "crop_recommendation_tp.tune:main"
 

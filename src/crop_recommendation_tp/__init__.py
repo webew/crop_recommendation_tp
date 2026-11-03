@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from crop-recommendation-tp!")
+"""Recommandation de cultures : chaîne MLOps."""
