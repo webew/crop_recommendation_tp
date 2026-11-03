@@ -8,3 +8,6 @@ split:
 mlflow:
     tracking_uri: sqlite:///mlflow.db
     experiment_name: crop-recommendation
+model:
+    params:
+        n_estimators: 100
