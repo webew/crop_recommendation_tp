@@ -1,7 +1,6 @@
 from crop_recommendation_tp.config import load_config
 from crop_recommendation_tp.data import load_dataset, split_dataset
-from crop_recommendation_tp.tracking import log_run, log_tuning
-from crop_recommendation_tp.train import evaluate
+from crop_recommendation_tp.tracking import log_tuning
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
@@ -21,23 +20,11 @@ def tune(X_train, y_train, config: dict) -> GridSearchCV:
     return search.fit(X_train, y_train)
 
 def main() -> None:
-    """Recherche d'hyperparamètres, puis évaluation et enregistrement du meilleur modèle."""
+    """Recherche d'hyperparamètres : enregistre les runs et affiche la meilleure combinaison."""
     config = load_config()
-    X_train, X_test, y_train, y_test = split_dataset(load_dataset(config), config)
+    X_train, _, y_train, _ = split_dataset(load_dataset(config), config)
     search = tune(X_train, y_train, config)
-    tuning_run_id = log_tuning(search, config)
-    best_model = search.best_estimator_
-    effective_config = {**config, "model": {"params": search.best_params_}}
-    predictions, metrics = evaluate(best_model, X_test, y_test)
-    run_id = log_run(
-        "best_model",
-        effective_config,
-        best_model,
-        metrics,
-        predictions,
-        X_test,
-        y_test,
-        tags={"tuning_run_id": tuning_run_id},
-    )
+    run_id = log_tuning(search, config)
+    print(f"Run {run_id} enregistré")
     print(f"Meilleurs paramètres : {search.best_params_}")
-    print(f"Run {run_id} enregistré : {metrics}")
+    print("Reporter ces paramètres dans model.params de config/config.yaml, puis lancer : uv run train")
