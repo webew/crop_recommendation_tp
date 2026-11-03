@@ -31,3 +31,7 @@ def split_dataset(df: pd.DataFrame, config: dict):
         random_state=config["split"]["random_seed"],
         stratify=y,
     )
+def get_data_version(config: dict) -> str:
+    """Retourne l'empreinte md5 du fichier de données, lue dans son fichier .dvc."""
+    dvc_file = load_yaml(config["dataset"]["path"] + ".dvc")
+    return dvc_file["outs"][0]["md5"]

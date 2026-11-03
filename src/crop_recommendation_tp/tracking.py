@@ -1,11 +1,14 @@
 import mlflow
 
-from crop_recommendation_tp.config import ROOT
-import matplotlib
+from crop_recommendation_tp.config import ROOT, load_yaml
+from crop_recommendation_tp.data import get_data_version
 
+import matplotlib
 matplotlib.use("Agg")  # rendu sans fenêtre, utilisable dans un script ou en CI
 import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+
+import subprocess
 
 def setup_mlflow(config: dict) -> None:
     """Connecte MLflow à la base et à l'expérience déclarées dans config.yaml."""
@@ -16,6 +19,19 @@ def setup_mlflow(config: dict) -> None:
     mlflow.set_tracking_uri(uri)
     mlflow.set_experiment(config["mlflow"]["experiment_name"])
 
+def get_git_commit() -> str:
+    """Retourne le commit courant, suffixé par -dirty si des modifications ne sont pas enregistrées."""
+
+    def git(*args: str) -> str:
+        result = subprocess.run(
+            ["git", *args], cwd=ROOT, capture_output=True, text=True, check=True
+        )
+        return result.stdout.strip()
+
+    try:
+        return git("rev-parse", "HEAD") + ("-dirty" if git("status", "--porcelain") else "")
+    except (OSError, subprocess.CalledProcessError):
+        return "inconnu"
 
 def log_run(run_name: str, config: dict, model, metrics: dict, predictions, y_test) -> str:
     """Enregistre un run (paramètres, métriques, modèle) et retourne son identifiant."""
@@ -23,6 +39,10 @@ def log_run(run_name: str, config: dict, model, metrics: dict, predictions, y_te
     params = {**config["model"]["params"], "random_state": config["split"]["random_seed"]}
     with mlflow.start_run(run_name=run_name) as run:
         mlflow.log_params(params)
+        mlflow.set_tag("data_md5", get_data_version(config))
+        mlflow.set_tag("git_commit", get_git_commit())
+        mlflow.log_dict(config, "config.yaml")
+        mlflow.log_dict(load_yaml(config["dataset"]["schema"]), "schema.yaml")
         mlflow.log_metrics(metrics)
         mlflow.sklearn.log_model(
             model,

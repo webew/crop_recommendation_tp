@@ -805,6 +805,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "dvc" },
+    { name = "matplotlib" },
     { name = "mlflow" },
     { name = "pandas" },
     { name = "pyyaml" },
@@ -819,6 +820,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "dvc", specifier = ">=3.67.1" },
+    { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "mlflow", specifier = ">=3.17.2" },
     { name = "pandas", specifier = ">=3.1.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
