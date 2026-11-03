@@ -90,7 +90,26 @@ uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 Adresse : `http://127.0.0.1:5000`
 
-## 6. Structure du projet
+## 6. Entraîner un modèle
+
+Workflow d'expérimentation :
+
+1. **Rechercher les hyperparamètres** (occasionnel) : comparaison des combinaisons de `tuning.param_grid` par validation croisée.
+
+   ```bash
+   uv run tune
+   ```
+
+2. **Reporter** la meilleure combinaison affichée dans `model.params` de `config/config.yaml`, puis enregistrer la modification dans un commit.
+3. **Entraîner le modèle candidat** : validation des données, entraînement, mesure sur le jeu de test, enregistrement d'un run MLflow.
+
+   ```bash
+   uv run train
+   ```
+
+La commande `train` se relance quand les données (fichier `.dvc`), les paramètres ou le code changent. Chaque run enregistre la version des données (`data_md5`) et celle du code (`git_commit`).
+
+## 7. Structure du projet
 
 | Élément | Rôle |
 |---|---|
@@ -101,7 +120,7 @@ Adresse : `http://127.0.0.1:5000`
 | `src/crop_recommendation_tp/` | Code du projet (validation des données) |
 | `.dvc/` | Configuration de DVC et cache local |
 
-## 7. Commandes utiles
+## 8. Commandes utiles
 
 | Commande | Effet |
 |---|---|
@@ -112,7 +131,7 @@ Adresse : `http://127.0.0.1:5000`
 | `uv run dvc status` | Comparer les données au fichier `.dvc` |
 | `git status --short` | Lister les fichiers modifiés |
 
-## 8. Résolution de problèmes
+## 9. Résolution de problèmes
 
 | Message | Cause | Solution |
 |---|---|---|
