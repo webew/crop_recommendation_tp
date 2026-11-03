@@ -117,39 +117,7 @@ uv run pytest
 
 Les tests (dossier `tests/`) vérifient la validation des données et le découpage. Ils utilisent de petits tableaux fabriqués et s'exécutent sans le fichier de données.
 
-## 8. Structure du projet
-
-| Élément | Rôle |
-|---|---|
-| `config/config.yaml` | Paramètres : chemins, colonne cible, découpage, graine aléatoire, MLflow |
-| `config/schema.yaml` | Schéma des données : colonnes, types, bornes, cultures autorisées |
-| `data/raw/` | Données brutes (fichier `.dvc` versionné dans Git) |
-| `notebooks/` | Notebooks d'exploration et de suivi |
-| `src/crop_recommendation_tp/` | Code du projet (validation des données) |
-| `.dvc/` | Configuration de DVC et cache local |
-
-## 9. Commandes utiles
-
-| Commande | Effet |
-|---|---|
-| `uv sync` | Installer les dépendances de `uv.lock` |
-| `uv add <paquet>` | Ajouter une dépendance |
-| `uv run <commande>` | Exécuter une commande dans l'environnement du projet |
-| `uv run dvc pull` | Récupérer les données depuis le remote |
-| `uv run dvc status` | Comparer les données au fichier `.dvc` |
-| `git status --short` | Lister les fichiers modifiés |
-
-## 10. Résolution de problèmes
-
-| Message | Cause | Solution |
-|---|---|---|
-| `FileNotFoundError: 'config/config.yaml'` dans le notebook | Le dossier courant du noyau n'est pas la racine du projet | Remplacer la première cellule par la version qui ne remonte d'un dossier qu'une fois (`if Path.cwd().name == "notebooks": os.chdir("..")`), redémarrer le noyau, puis relancer toutes les cellules |
-| `Some of the cache files do not exist` ou `Checkout failed` lors de `dvc pull` | Le remote est absent sur ce poste | Méthode A ou B de la section 3 |
-| Noyau introuvable dans VS Code | Environnement `.venv` non sélectionné | Lancer `uv sync`, puis sélectionner le noyau `.venv` |
-| `UntrustedTypesFoundException` à l'enregistrement du modèle | MLflow enregistre les modèles scikit-learn au format skops, qui exige la liste des types autorisés | Passer `skops_trusted_types=["sklearn.tree._tree.Tree"]` à `mlflow.sklearn.log_model` |
-| `LF will be replaced by CRLF` | Conversion des fins de ligne par Git sous Windows | Information sans conséquence |
-
-## Intégration continue
+## 8. Intégration continue
 
 Le workflow `.github/workflows/ci.yml` s'exécute à chaque `push` et `pull_request`.
 Il installe l'environnement (`uv sync --locked`), puis lance :
@@ -164,3 +132,35 @@ Avant chaque commit, exécuter ces trois commandes en local.
 `uv run ruff check . --fix` et `uv run ruff format .` corrigent automatiquement la plupart des écarts.
 
 Les numéros de version des actions (`actions/checkout`, `astral-sh/setup-uv`) se vérifient sur la page GitHub de chaque action.
+
+## 9. Structure du projet
+
+| Élément | Rôle |
+|---|---|
+| `config/config.yaml` | Paramètres : chemins, colonne cible, découpage, graine aléatoire, MLflow |
+| `config/schema.yaml` | Schéma des données : colonnes, types, bornes, cultures autorisées |
+| `data/raw/` | Données brutes (fichier `.dvc` versionné dans Git) |
+| `notebooks/` | Notebooks d'exploration et de suivi |
+| `src/crop_recommendation_tp/` | Code du projet (validation des données) |
+| `.dvc/` | Configuration de DVC et cache local |
+
+## 10. Commandes utiles
+
+| Commande | Effet |
+|---|---|
+| `uv sync` | Installer les dépendances de `uv.lock` |
+| `uv add <paquet>` | Ajouter une dépendance |
+| `uv run <commande>` | Exécuter une commande dans l'environnement du projet |
+| `uv run dvc pull` | Récupérer les données depuis le remote |
+| `uv run dvc status` | Comparer les données au fichier `.dvc` |
+| `git status --short` | Lister les fichiers modifiés |
+
+## 11. Résolution de problèmes
+
+| Message | Cause | Solution |
+|---|---|---|
+| `FileNotFoundError: 'config/config.yaml'` dans le notebook | Le dossier courant du noyau n'est pas la racine du projet | Remplacer la première cellule par la version qui ne remonte d'un dossier qu'une fois (`if Path.cwd().name == "notebooks": os.chdir("..")`), redémarrer le noyau, puis relancer toutes les cellules |
+| `Some of the cache files do not exist` ou `Checkout failed` lors de `dvc pull` | Le remote est absent sur ce poste | Méthode A ou B de la section 3 |
+| Noyau introuvable dans VS Code | Environnement `.venv` non sélectionné | Lancer `uv sync`, puis sélectionner le noyau `.venv` |
+| `UntrustedTypesFoundException` à l'enregistrement du modèle | MLflow enregistre les modèles scikit-learn au format skops, qui exige la liste des types autorisés | Passer `skops_trusted_types=["sklearn.tree._tree.Tree"]` à `mlflow.sklearn.log_model` |
+| `LF will be replaced by CRLF` | Conversion des fins de ligne par Git sous Windows | Information sans conséquence |
