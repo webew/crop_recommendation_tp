@@ -1,6 +1,7 @@
 import pandas as pd
 from pandas.api import types
 
+
 def is_number(series: pd.Series) -> bool:
     """Vrai pour une colonne numérique (entiers ou décimaux), booléens exclus."""
     return types.is_numeric_dtype(series) and not types.is_bool_dtype(series)

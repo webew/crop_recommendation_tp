@@ -35,18 +35,13 @@ def get_git_commit() -> str:
     except (OSError, subprocess.CalledProcessError):
         return "inconnu"
 
-def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_test, y_test) -> str:
+def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_test, y_test, tags: dict | None = None) -> str:
     """Enregistre un run (paramètres, métriques, modèle) et retourne son identifiant."""
     setup_mlflow(config)
-    params = {
-        **config["model"]["params"],
-        "random_state": config["split"]["random_seed"],
-        "test_size": config["split"]["test_size"],
-    }
+    params = {**model.get_params(), "test_size": config["split"]["test_size"]}
     with mlflow.start_run(run_name=run_name) as run:
         mlflow.log_params(params)
-        mlflow.set_tag("data_md5", get_data_version(config))
-        mlflow.set_tag("git_commit", get_git_commit())
+        mlflow.set_tags({**trace_tags(config), **(tags or {})})
         mlflow.log_dict(config, "config.yaml")
         mlflow.log_dict(load_yaml(config["dataset"]["schema"]), "schema.yaml")
         mlflow.log_metrics(metrics)
@@ -67,3 +62,29 @@ def log_run(run_name: str, config: dict, model, metrics: dict, predictions, X_te
         mlflow.log_figure(fig, "confusion_matrix.png")
         plt.close(fig)
     return run.info.run_id
+
+def trace_tags(config: dict) -> dict:
+    """Étiquettes qui relient un run à la version des données et au commit du code."""
+    return {"data_md5": get_data_version(config), "git_commit": get_git_commit()}
+
+def log_tuning(search, config: dict) -> str:
+    """Enregistre une recherche : un run parent et un run enfant par combinaison."""
+    setup_mlflow(config)
+    tuning = config["tuning"]
+    metric = f"cv_{tuning['scoring']}"
+    results = search.cv_results_
+    with mlflow.start_run(run_name="tuning") as parent:
+        mlflow.set_tags(trace_tags(config))
+        mlflow.log_params({"cv_folds": tuning["cv_folds"], "scoring": tuning["scoring"]})
+        for i, params in enumerate(results["params"]):
+            with mlflow.start_run(run_name=f"cv_{i}", nested=True):
+                mlflow.log_params(params)
+                mlflow.log_metrics(
+                    {
+                        f"{metric}_mean": results["mean_test_score"][i],
+                        f"{metric}_std": results["std_test_score"][i],
+                    }
+                )
+        mlflow.log_params({f"best_{k}": v for k, v in search.best_params_.items()})
+        mlflow.log_metric(f"best_{metric}_mean", search.best_score_)
+    return parent.info.run_id
