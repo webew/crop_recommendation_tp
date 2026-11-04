@@ -5,6 +5,7 @@ from crop_recommendation_tp.config import ROOT, load_yaml
 from crop_recommendation_tp.data import get_data_version
 
 matplotlib.use("Agg")  # rendu sans fenêtre, utilisable dans un script ou en CI
+import os
 import subprocess
 
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 
 def setup_mlflow(config: dict) -> None:
     """Connecte MLflow à la base et à l'expérience déclarées dans config.yaml."""
-    uri = config["mlflow"]["tracking_uri"]
+    uri = os.environ.get("MLFLOW_TRACKING_URI") or config["mlflow"]["tracking_uri"]
     if uri.startswith("sqlite:///"):
         # chemin de la base calculé depuis la racine du projet
         uri = "sqlite:///" + (ROOT / uri.removeprefix("sqlite:///")).as_posix()
