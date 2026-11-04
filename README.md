@@ -133,6 +133,43 @@ Avant chaque commit, exécuter ces trois commandes en local.
 
 Les numéros de version des actions (`actions/checkout`, `astral-sh/setup-uv`) se vérifient sur la page GitHub de chaque action.
 
+## Serveur MLflow
+
+Le serveur MLflow et sa base PostgreSQL démarrent avec Docker Compose.
+
+### Première utilisation
+
+1. Copier le modèle de variables, puis renseigner le mot de passe :
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Sous Windows (PowerShell) : `Copy-Item .env.example .env`.
+
+2. Démarrer les services :
+
+   ```bash
+   docker compose up -d
+   ```
+
+3. Ouvrir http://localhost:5001 (port défini dans `compose.yaml`).
+
+### Utilisation
+
+Les commandes `uv run train` et `uv run tune` envoient leurs runs au serveur.
+L'adresse par défaut est `tracking_uri` dans `config/config.yaml`.
+La variable d'environnement `MLFLOW_TRACKING_URI` la remplace.
+
+### Commandes utiles
+
+| Commande | Effet |
+|---|---|
+| `docker compose ps` | État des services |
+| `docker compose logs --tail 10 mlflow` | Dernières lignes du journal |
+| `docker compose down` | Arrêt, données conservées |
+| `docker compose down -v` | Arrêt et suppression des données |
+
 ## 9. Structure du projet
 
 | Élément | Rôle |
