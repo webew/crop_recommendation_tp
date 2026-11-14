@@ -1,15 +1,15 @@
+import subprocess
+
 import matplotlib
 import mlflow
 
-from crop_recommendation_tp.config import ROOT, load_yaml
-from crop_recommendation_tp.data import get_data_version
-
 matplotlib.use("Agg")  # rendu sans fenêtre, utilisable dans un script ou en CI
-import subprocess
-
 import matplotlib.pyplot as plt
 from mlflow.models import infer_signature
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+
+from crop_recommendation_tp.config import ROOT, load_yaml
+from crop_recommendation_tp.data import get_data_version
 
 
 def setup_mlflow(config: dict) -> None:
