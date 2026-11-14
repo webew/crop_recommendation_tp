@@ -18,3 +18,5 @@ mlruns/
 
 # Jupyter
 .ipynb_checkpoints/
+
+.env
