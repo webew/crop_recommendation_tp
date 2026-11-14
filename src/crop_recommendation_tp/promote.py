@@ -7,16 +7,20 @@ from crop_recommendation_tp.config import load_config
 from crop_recommendation_tp.tracking import setup_mlflow
 
 
-def get_champion_score(client: MlflowClient, config: dict, metric: str) -> float | None:
-    """Retourne le score du modèle champion, ou None si le registre n'a pas de champion."""
+def get_champion(client: MlflowClient, config: dict) -> ModelVersion | None:
+    """Retourne la version qui porte l'alias champion, ou None s'il n'y en a pas."""
     registry = config["mlflow"]
     try:
-        version = client.get_model_version_by_alias(
+        return client.get_model_version_by_alias(
             registry["registered_model_name"], registry["champion_alias"]
         )
     except MlflowException:
         return None
-    return client.get_run(version.run_id).data.metrics[metric]
+
+
+def get_run_score(client: MlflowClient, run_id: str, metric: str) -> float | None:
+    """Retourne la valeur d'une métrique d'un run, ou None si le run ne l'a pas enregistrée."""
+    return client.get_run(run_id).data.metrics.get(metric)
 
 
 def promote_candidate(client: MlflowClient, config: dict, run_id: str) -> ModelVersion:
@@ -50,11 +54,21 @@ def main() -> None:
     if run_id is None:
         print("Aucun run candidat : lancer d'abord uv run train.")
         return
-    candidate_score = client.get_run(run_id).data.metrics[metric]
-    champion_score = get_champion_score(client, config, metric)
-
-    if champion_score is not None and candidate_score <= champion_score:
-        print(f"Candidat non promu : {candidate_score:.4f} <= {champion_score:.4f}.")
+    candidate_score = get_run_score(client, run_id, metric)
+    if candidate_score is None:
+        print(f"Le run candidat n'a pas la métrique {metric}.")
         return
+
+    champion = get_champion(client, config)
+    if champion is not None:
+        if champion.run_id == run_id:
+            print(f"Le candidat est déjà le champion (version {champion.version}).")
+            return
+        champion_score = get_run_score(client, champion.run_id, metric)
+        if champion_score is not None and candidate_score <= champion_score:
+            print(
+                f"Candidat non promu : {candidate_score:.4f} <= {champion_score:.4f}."
+            )
+            return
     version = promote_candidate(client, config, run_id)
     print(f"Version {version.version} promue champion (score {candidate_score:.4f}).")
