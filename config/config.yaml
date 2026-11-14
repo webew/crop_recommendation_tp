@@ -6,8 +6,10 @@ split:
     test_size: 0.2
     random_seed: 42
 mlflow:
-    tracking_uri: http://localhost:5001
+    tracking_uri: http://localhost:5002
     experiment_name: crop-recommendation
+    registered_model_name: crop-recommendation
+    champion_alias: champion
 model:
     params:
         n_estimators: 200

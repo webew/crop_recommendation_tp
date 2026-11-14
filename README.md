@@ -153,7 +153,7 @@ Le serveur MLflow et sa base PostgreSQL démarrent avec Docker Compose.
    docker compose up -d
    ```
 
-3. Ouvrir http://localhost:5001 (port défini dans `compose.yaml`).
+3. Ouvrir http://localhost:5002 (port défini dans `compose.yaml`).
 
 ### Utilisation
 

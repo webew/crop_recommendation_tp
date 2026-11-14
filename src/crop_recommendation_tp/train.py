@@ -55,5 +55,14 @@ def main() -> None:
     cv_metrics = cross_validate_model(X_train, y_train, config)
     predictions, test_metrics = evaluate(model, X_test, y_test)
     metrics = {**cv_metrics, **test_metrics}
-    run_id = log_run("train", config, model, metrics, predictions, X_test, y_test)
+    run_id = log_run(
+        "train",
+        config,
+        model,
+        metrics,
+        predictions,
+        X_test,
+        y_test,
+        tags={"stage": "candidate"},
+    )
     print(f"Run {run_id} enregistré : {metrics}")
