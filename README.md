@@ -170,6 +170,45 @@ La variable d'environnement `MLFLOW_TRACKING_URI` la remplace.
 | `docker compose down` | Arrêt, données conservées |
 | `docker compose down -v` | Arrêt et suppression des données |
 
+## Registre de modèles et promotion
+
+Le registre du serveur MLflow conserve les versions du modèle `crop-recommendation`.
+L'alias `champion` désigne la version de référence.
+
+### Principe
+
+1. `uv run train` entraîne un modèle, mesure son score en validation croisée
+   (`cv_f1_macro_mean`) et enregistre un run étiqueté `stage=candidate`.
+2. `uv run promote` compare le score du dernier candidat à celui du champion.
+   Le candidat devient champion lorsque son score est strictement supérieur.
+
+### Résultats de promote
+
+| Situation | Résultat |
+|---|---|
+| Aucun run candidat | Message : lancer `uv run train` |
+| Candidat déjà champion | Aucune action |
+| Score inférieur ou égal | Champion conservé |
+| Score supérieur | Nouvelle version, alias `champion` attribué |
+| Registre sans champion | Candidat promu |
+| Champion sans score comparable | Candidat promu |
+
+### Configuration
+
+Les clés `registered_model_name` et `champion_alias` se trouvent dans la section
+`mlflow` de `config/config.yaml`. Le nom de la métrique comparée se déduit de
+`tuning.scoring` : `cv_<scoring>_mean`.
+
+### Vérification
+
+Dans l'interface MLflow, section Model registry, le modèle `crop-recommendation`
+affiche l'alias `champion` sur la version promue.
+
+### Tests
+
+`uv run pytest` exécute les tests de `promote` sur une base SQLite temporaire :
+le serveur MLflow n'est pas nécessaire.
+
 ## 9. Structure du projet
 
 | Élément | Rôle |
