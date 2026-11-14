@@ -12,23 +12,6 @@ from crop_recommendation_tp.promote import main as promote_main
 from crop_recommendation_tp.tracking import setup_mlflow
 
 
-@pytest.fixture
-def config(tmp_path, monkeypatch):
-    """Configuration qui pointe vers une base SQLite temporaire."""
-    monkeypatch.chdir(tmp_path)
-    db = (tmp_path / "mlflow.db").as_posix()
-    monkeypatch.setenv("MLFLOW_TRACKING_URI", f"sqlite:///{db}")
-    return {
-        "mlflow": {
-            "tracking_uri": "inutilisé : MLFLOW_TRACKING_URI est prioritaire",
-            "experiment_name": "test-experiment",
-            "registered_model_name": "test-model",
-            "champion_alias": "champion",
-        },
-        "tuning": {"scoring": "f1_macro"},
-    }
-
-
 def log_candidate(config, score):
     """Enregistre un run candidat avec un modèle minimal et retourne son run_id."""
     setup_mlflow(config)
