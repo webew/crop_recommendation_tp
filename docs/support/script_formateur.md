@@ -149,7 +149,9 @@ make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000))
 **Fonction `evaluer` (section 4)**
 
 ```python
-scores = cross_validate(modele, X_train, y_train, cv=cv, scoring=["f1_macro", "accuracy"])
+scores = cross_validate(
+    modele, X_train, y_train, cv=cv, scoring=["f1_macro", "accuracy"]
+)
 with mlflow.start_run(run_name=nom):
     mlflow.set_tag("etape", "comparaison")
     mlflow.log_params(...)
@@ -276,7 +278,7 @@ from crop_recommendation_tp.validation import validate
 c = load_config()
 df = pd.read_csv(c["dataset"]["path"])
 schema = load_yaml(c["dataset"]["schema"])
-validate(df, schema)                  # → []
+validate(df, schema)  # → []
 
 df.loc[0, "ph"] = 15
 df.loc[1, "label"] = "ricee"
