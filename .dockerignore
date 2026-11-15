@@ -1,0 +1,18 @@
+# Ce qui ne doit jamais entrer dans une image
+.env
+.git
+.venv
+**/__pycache__
+.pytest_cache
+.ruff_cache
+
+# Données, runs et caches : ils vivent hors des images
+data/
+.dvc/cache
+mlruns/
+mlflow.db
+
+# Inutile pour faire tourner l'API
+notebooks/
+docs/
+tests/
