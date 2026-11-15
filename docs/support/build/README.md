@@ -1,18 +1,21 @@
 # Génération des supports de cours
 
-Ce dossier produit les deux supports de `docs/support/` :
+Ce dossier produit les supports de `docs/support/` :
 
 | Fichier produit | Générateur |
 |---|---|
-| `cours_mlops_phase1.pptx` | `build_deck.js` (pptxgenjs) |
+| `seance1_demarche_mlops.pptx` | `build_seance1.js` (pptxgenjs) : ouverture de la séance 1, chaîne MLOps et cycle de vie |
+| `cours_mlops_phase1.pptx` | `build_deck.js` (pptxgenjs) : toute la phase 1, en local |
 | `guide_mlops_phase1.pdf` | `build_guide.py` (HTML + SVG, mis en page par Google Chrome) |
 
 ## Fichiers
 
 | Fichier | Rôle |
 |---|---|
-| `build_deck.js` | Diapositives : thème, mises en page, schémas en formes PowerPoint, notes du formateur |
-| `apply_theme.js` | Écrit les couleurs du thème dans le `.pptx` (appelé par `build_deck.js`) |
+| `deck_lib.js` | Commun aux diapositives : thème, mises en page, outils de dessin (boîtes, flèches, code, tableaux…) |
+| `build_seance1.js` | Diapositives d'ouverture de la séance 1, avec les notes du formateur |
+| `build_deck.js` | Diapositives de la phase 1, avec les notes du formateur |
+| `apply_theme.js` | Écrit les couleurs du thème dans le `.pptx` (appelé par `deck_lib.js`) |
 | `build_guide.py` | Texte du guide, chapitre par chapitre ; sommaire numéroté en deux passes |
 | `figures.py` | Schémas du guide (SVG) |
 | `diagrams.py` | Outils de dessin SVG (boîtes, flèches, textes) |
@@ -37,9 +40,10 @@ npm install                                            # une seule fois
 uv run --project ../../.. python collect_results.py
 
 # 2. Reporter les valeurs qui ont changé dans build_guide.py et build_deck.js
-#    (chercher par exemple 0,9943, 0.8377, 4c4afe, 28 passed…)
+#    (chercher par exemple 0,9943, 0.8472, 4c4afe, 30 passed…)
 
-# 3. Régénérer les deux supports
+# 3. Régénérer les supports
+node build_seance1.js
 node build_deck.js
 uv run --project ../../.. --with pypdf python build_guide.py
 ```
@@ -55,5 +59,6 @@ Pour les diapositives, exporter d'abord le `.pptx` en PDF (PowerPoint ou Keynote
 
 ## Remarques
 
+- **Avant de régénérer un `.pptx`, vérifier qu'il n'a pas été retouché dans PowerPoint** (`git status docs/support`) : la régénération écraserait ces retouches. Si c'est le cas, les reporter dans le générateur, ou modifier directement le `.pptx`.
 - Ce dossier est exclu de Ruff (`[tool.ruff] extend-exclude` dans `pyproject.toml`) : ce n'est pas du code de l'application.
-- Les deux graphiques des diapositives sont dessinés en formes, et non en graphiques natifs : Keynote n'affiche pas les graphiques produits par pptxgenjs.
+- Les graphiques des diapositives sont dessinés en formes, et non en graphiques natifs : Keynote n'affiche pas les graphiques produits par pptxgenjs.

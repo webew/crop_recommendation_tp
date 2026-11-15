@@ -328,6 +328,7 @@ Les numéros de version des actions (`actions/checkout`, `astral-sh/setup-uv`) s
 | Fichier | Contenu |
 | --- | --- |
 | `docs/support/guide_mlops_phase1.pdf` | Guide de l'étudiant : reconstruction pas à pas de l'application, choix justifiés, plan de test, exercices, glossaire |
-| `docs/support/cours_mlops_phase1.pptx` | Diapositives du cours, avec les notes du formateur |
+| `docs/support/seance1_demarche_mlops.pptx` | Ouverture de la séance 1 : la chaîne MLOps (local, GitHub, production) et le cycle de vie du modèle |
+| `docs/support/cours_mlops_phase1.pptx` | Diapositives de la phase 1, avec les notes du formateur |
 
-Les deux fichiers sont générés par les scripts de `docs/support/build/`. Ce dossier a son propre [README](docs/support/build/README.md), qui explique comment les régénérer après une modification du code.
+Ces fichiers sont générés par les scripts de `docs/support/build/`. Ce dossier a son propre [README](docs/support/build/README.md), qui explique comment les régénérer après une modification du code.
