@@ -3,7 +3,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import cross_val_score
 
 from crop_recommendation_tp.config import load_config
-from crop_recommendation_tp.data import load_dataset, split_dataset
+from crop_recommendation_tp.data import build_cv, load_dataset, split_dataset
 from crop_recommendation_tp.tracking import log_run
 
 
@@ -28,7 +28,7 @@ def cross_validate_model(X_train, y_train, config: dict) -> dict:
         X_train,
         y_train,
         scoring=tuning["scoring"],
-        cv=tuning["cv_folds"],
+        cv=build_cv(config),
     )
     metric = f"cv_{tuning['scoring']}"
     return {

@@ -1,7 +1,7 @@
 import hashlib
 
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, train_test_split
 
 from crop_recommendation_tp.config import ROOT, load_yaml
 from crop_recommendation_tp.validation import validate
@@ -32,6 +32,15 @@ def split_dataset(df: pd.DataFrame, config: dict):
         test_size=config["split"]["test_size"],
         random_state=config["split"]["random_seed"],
         stratify=y,
+    )
+
+
+def build_cv(config: dict) -> StratifiedKFold:
+    """Plis de validation croisée, identiques pour train et tune (lignes mélangées avec la graine)."""
+    return StratifiedKFold(
+        n_splits=config["tuning"]["cv_folds"],
+        shuffle=True,
+        random_state=config["split"]["random_seed"],
     )
 
 

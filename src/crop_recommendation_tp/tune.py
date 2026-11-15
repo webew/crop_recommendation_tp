@@ -1,22 +1,19 @@
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.model_selection import GridSearchCV
 
 from crop_recommendation_tp.config import load_config
-from crop_recommendation_tp.data import load_dataset, split_dataset
+from crop_recommendation_tp.data import build_cv, load_dataset, split_dataset
 from crop_recommendation_tp.tracking import log_tuning
 
 
 def tune(X_train, y_train, config: dict) -> GridSearchCV:
     """Évalue chaque combinaison de la grille par validation croisée sur le jeu d'entraînement."""
-    seed = config["split"]["random_seed"]
     tuning = config["tuning"]
     search = GridSearchCV(
-        RandomForestClassifier(random_state=seed),
+        RandomForestClassifier(random_state=config["split"]["random_seed"]),
         param_grid=tuning["param_grid"],
         scoring=tuning["scoring"],
-        cv=StratifiedKFold(
-            n_splits=tuning["cv_folds"], shuffle=True, random_state=seed
-        ),
+        cv=build_cv(config),
         n_jobs=-1,
     )
     return search.fit(X_train, y_train)

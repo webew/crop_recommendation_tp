@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from crop_recommendation_tp.data import get_features, split_dataset
+from crop_recommendation_tp.data import build_cv, get_features, split_dataset
 
 
 @pytest.fixture
@@ -9,6 +9,7 @@ def config():
     return {
         "dataset": {"schema": "config/schema.yaml", "target": "label"},
         "split": {"test_size": 0.2, "random_seed": 42},
+        "tuning": {"cv_folds": 5},
     }
 
 
@@ -46,3 +47,14 @@ def test_decoupage_reproductible(df, config):
     premier = split_dataset(df, config)
     second = split_dataset(df, config)
     assert premier[0].index.equals(second[0].index)
+
+
+def test_plis_reproductibles_et_melanges(config):
+    X = pd.DataFrame({"a": range(40)})
+    y = pd.Series(["rice"] * 20 + ["apple"] * 20)  # rangé par culture, comme le CSV
+    premiers = [test.tolist() for _, test in build_cv(config).split(X, y)]
+    seconds = [test.tolist() for _, test in build_cv(config).split(X, y)]
+    assert len(premiers) == 5
+    assert premiers == seconds
+    # sans mélange, le premier pli prendrait les 4 premières lignes de chaque culture
+    assert premiers[0] != [0, 1, 2, 3, 20, 21, 22, 23]
