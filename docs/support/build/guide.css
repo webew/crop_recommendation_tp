@@ -1,0 +1,123 @@
+:root {
+  --forest: #2C5F2D;
+  --moss: #97BC62;
+  --moss-bg: #EEF4E6;
+  --wheat: #B7791F;
+  --wheat-bg: #FBF1DF;
+  --red: #B5452B;
+  --red-bg: #F8E6E1;
+  --blue: #2F5D7C;
+  --blue-bg: #E5EEF4;
+  --ink: #1F2A1F;
+  --grey: #5B6B5B;
+  --line: #D5DDD1;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 17mm 20mm 17mm;
+  @bottom-left { content: "Du notebook à l'application · La démarche MLOps"; font: 8pt "Helvetica Neue", Arial, sans-serif; color: #8A978A; }
+  @bottom-right { content: counter(page); font: 9pt "Helvetica Neue", Arial, sans-serif; color: #5B6B5B; }
+}
+@page cover { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 10.3pt; line-height: 1.5; color: var(--ink); margin: 0; background: #fff; }
+
+/* ---------- couverture */
+.cover { page: cover; height: 297mm; box-sizing: border-box; padding: 26mm 22mm 18mm; background: var(--forest); color: #fff; position: relative; break-after: page; }
+.cover-top { font-size: 10.5pt; letter-spacing: .12em; text-transform: uppercase; color: #CFE3B8; }
+.cover-title { font-family: "Charter", "Iowan Old Style", Georgia, serif; font-size: 46pt; line-height: 1.05; font-weight: bold; margin-top: 22mm; }
+.cover-sub { font-family: "Charter", Georgia, serif; font-size: 22pt; color: #DCEBD0; margin-top: 6mm; font-style: italic; }
+.cover-desc { font-size: 12pt; color: #E8F1DF; margin-top: 8mm; max-width: 140mm; }
+.cover-svg { background: #fff; border-radius: 10px; padding: 6mm; margin-top: 16mm; }
+.cover-svg svg { width: 100%; height: auto; display: block; }
+.cover-foot { position: absolute; bottom: 18mm; left: 22mm; font-size: 10pt; color: #CFE3B8; }
+
+/* ---------- sommaire */
+.toc { break-after: page; }
+.toc-row { display: flex; align-items: baseline; font-size: 11pt; padding: 3.2pt 0; }
+.toc-row a { color: var(--ink); text-decoration: none; }
+.toc-row.front a { font-style: italic; }
+.toc-row .dots { flex: 1; border-bottom: 1px dotted #B9C4B5; margin: 0 6pt; transform: translateY(-3pt); }
+.toc-row .pg { color: var(--forest); font-weight: bold; min-width: 18pt; text-align: right; }
+
+/* ---------- titres */
+section { break-before: page; }
+section.cover, section.toc { break-before: auto; }
+h1 { font-family: "Charter", "Iowan Old Style", Georgia, serif; font-size: 24pt; line-height: 1.15; color: var(--forest); margin: 0 0 4pt; display: flex; align-items: center; gap: 10pt; }
+h1 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30pt; height: 30pt; border-radius: 50%; background: var(--forest); color: #fff; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 15pt; }
+h1.unnumbered { margin-bottom: 14pt; }
+.kicker { font-family: "Charter", Georgia, serif; font-style: italic; color: var(--grey); font-size: 12.5pt; margin: 0 0 16pt; }
+h2 { font-size: 14pt; color: var(--forest); margin: 18pt 0 6pt; break-after: avoid; }
+h3 { font-size: 11.5pt; color: var(--ink); margin: 12pt 0 4pt; break-after: avoid; }
+p { margin: 0 0 7pt; orphans: 3; widows: 3; }
+ul, ol { margin: 0 0 8pt; padding-left: 18pt; }
+li { margin-bottom: 3pt; }
+strong { color: #183A19; }
+
+code { font-family: Menlo, monospace; font-size: 8.6pt; background: #F1F4EE; padding: 0.5pt 3pt; border-radius: 3pt; color: #23452A; }
+
+/* ---------- blocs de code */
+.code { border: 1px solid var(--line); border-radius: 7pt; margin: 6pt 0 10pt; background: #F8FAF6; overflow: hidden; }
+.code.keep { break-inside: avoid; }
+.code-title { font-family: Menlo, monospace; font-size: 8pt; color: var(--grey); background: #EDF2E8; padding: 3pt 8pt; border-bottom: 1px solid var(--line); }
+.code pre { margin: 0; padding: 7pt 9pt; font-family: Menlo, monospace; font-size: 8pt; line-height: 1.42; white-space: pre-wrap; word-break: break-word; background: transparent !important; }
+.code pre code { background: none; padding: 0; }
+
+/* ---------- encadrés */
+.box { border-radius: 8pt; padding: 8pt 11pt 3pt; margin: 9pt 0 11pt; break-inside: avoid; border: 1px solid; }
+.box-title { font-weight: bold; font-size: 9.5pt; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4pt; }
+.box.concept { background: var(--moss-bg); border-color: var(--moss); }
+.box.concept .box-title { color: var(--forest); }
+.box.why { background: var(--wheat-bg); border-color: #E3C48E; }
+.box.why .box-title { color: var(--wheat); }
+.box.warn { background: var(--red-bg); border-color: #E2AFA2; }
+.box.warn .box-title { color: var(--red); }
+.box.tip { background: var(--blue-bg); border-color: #A9C2D3; }
+.box.tip .box-title { color: var(--blue); }
+.box.try { background: #fff; border: 1.5px dashed var(--forest); }
+.box.try .box-title { color: var(--forest); }
+.box.result { background: #F4F7F2; border-color: var(--line); }
+.box.result .box-title { color: var(--grey); }
+.box .code { background: #fff; }
+.box table { background: #fff; }
+
+/* ---------- tableaux */
+table { width: 100%; border-collapse: collapse; margin: 6pt 0 11pt; font-size: 9.3pt; table-layout: fixed; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th { background: var(--forest); color: #fff; text-align: left; padding: 4.5pt 6pt; font-weight: bold; }
+td { padding: 4.5pt 6pt; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+tbody tr:nth-child(even) td { background: #F7F9F5; }
+table.small { font-size: 8.6pt; }
+table.small code { font-size: 7.8pt; }
+
+/* ---------- figures */
+figure { margin: 10pt 0 14pt; break-inside: avoid; text-align: center; }
+figure svg { width: 100%; height: auto; display: block; }
+figure img { display: block; margin: 0 auto; border: 1px solid var(--line); border-radius: 6pt; }
+figcaption { font-size: 8.8pt; color: var(--grey); margin-top: 5pt; text-align: center; }
+
+/* ---------- parcours */
+.step { display: flex; gap: 10pt; margin: 0 0 8pt; break-inside: avoid; }
+.step-num { flex: 0 0 22pt; height: 22pt; border-radius: 50%; background: var(--forest); color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 11pt; margin-top: 2pt; }
+.step-body { flex: 1; }
+.step-title { font-weight: bold; color: var(--forest); }
+.step-body .code { margin: 3pt 0 3pt; }
+.step-result { font-size: 9.2pt; color: var(--grey); }
+
+/* ---------- retour d'expérience */
+.case { break-inside: avoid; margin-bottom: 10pt; }
+.case-title { font-weight: bold; font-size: 11.5pt; color: var(--forest); margin-bottom: 2pt; }
+table.case-table thead { display: none; }
+table.case-table { margin: 0; }
+table.case-table td:first-child { color: var(--forest); }
+
+/* ---------- exercices */
+.exercise { border: 1px solid var(--line); border-radius: 8pt; padding: 8pt 11pt 3pt; margin-bottom: 9pt; break-inside: avoid; }
+.ex-head { font-weight: bold; font-size: 11pt; margin-bottom: 4pt; }
+.ex-num { color: #fff; background: var(--forest); border-radius: 4pt; padding: 1pt 6pt; margin-right: 4pt; font-size: 9pt; }
+.ex-lvl { color: var(--wheat); float: right; }
+.ex-expect { color: var(--grey); font-size: 9.5pt; }
+table.small td code { font-size: 7.3pt; }

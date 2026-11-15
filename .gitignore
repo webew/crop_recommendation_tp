@@ -2,6 +2,8 @@
 __pycache__/
 *.py[oc]
 build/
+# … sauf les générateurs des supports de cours, à versionner
+!docs/support/build/
 dist/
 wheels/
 *.egg-info
@@ -20,3 +22,6 @@ mlruns/
 .ipynb_checkpoints/
 
 .env
+
+# Fichiers de verrou de Microsoft Office (document ouvert)
+~$*
