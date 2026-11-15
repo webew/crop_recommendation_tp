@@ -4,7 +4,7 @@ Ce dossier produit les supports de `docs/support/` :
 
 | Fichier produit | Générateur |
 |---|---|
-| `seance1_demarche_mlops.pptx` | `build_seance1.js` (pptxgenjs) : ouverture de la séance 1, chaîne MLOps et cycle de vie |
+| `seance1_demarche_mlops.pptx` | `build_seance1.js` a produit la première version. **Le fichier a depuis été retouché dans PowerPoint : il est la référence et se modifie directement ; ne pas le régénérer.** |
 | `cours_mlops_phase1.pptx` | `build_deck.js` (pptxgenjs) : toute la phase 1, en local |
 | `guide_mlops_phase1.pdf` | `build_guide.py` (HTML + SVG, mis en page par Google Chrome) |
 
@@ -43,7 +43,6 @@ uv run --project ../../.. python collect_results.py
 #    (chercher par exemple 0,9943, 0.8472, 4c4afe, 30 passed…)
 
 # 3. Régénérer les supports
-node build_seance1.js
 node build_deck.js
 uv run --project ../../.. --with pypdf python build_guide.py
 ```
