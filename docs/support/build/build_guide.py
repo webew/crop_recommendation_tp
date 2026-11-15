@@ -850,7 +850,7 @@ add(UL([
     "`get_data_version` (empreinte des données et suffixe `-modified`).",
     "La **qualité** du modèle : aucun test ne garantit un score minimal. Un test « le score dépasse 0,95 » serait un bon ajout (voir exercices).",
 ]))
-add(BOX("try", P("Lancez `uv run pytest tests/test_validation.py -v`, puis cassez volontairement une règle dans `validation.py` (par exemple remplacez `>` par `>=` dans la borne `max`). Relancez : quels tests échouent ? Lisez le message d'erreur, puis annulez la modification.")))
+add(BOX("try", P("Lancez `uv run pytest tests/test_validation.py -v`, puis cassez volontairement une règle dans `validation.py` : dans `TYPE_CHECKS`, remplacez `\"float\": is_number` par `\"float\": types.is_float_dtype`. Relancez : `test_entiers_acceptes_pour_un_float` échoue. Lisez le message d'erreur, puis annulez la modification.")))
 add("</section>")
 
 # ============ 17. Qualité & CI
