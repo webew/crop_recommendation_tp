@@ -663,7 +663,7 @@ async function build() {
   section("5. Registre, promotion et API");
   divider(5, "Registre, promotion et API", "Décider automatiquement quel modèle sert les utilisateurs.", "");
   {
-    const s = content("Registre de modèles et alias champion", "Le suivi garde tous les essais, le registre seulement les modèles retenus. L'API demande « le champion », pas « la version 3 » : changer de modèle revient à déplacer l'alias. Les anciens stages (Staging, Production) sont dépréciés au profit des alias.");
+    const s = content("Registre de modèles et alias champion", "Le suivi garde tous les essais, le registre seulement les modèles retenus. L'API demande « le champion », pas « la version 3 » : changer de modèle revient à déplacer l'alias. Les anciens stages (Staging, Production) sont dépréciés au profit des alias. Piège fréquent dans l'interface : l'onglet Models d'une expérience liste les modèles enregistrés par les runs, qui n'ont jamais d'alias ; l'alias champion se voit dans Model registry (barre de gauche), colonne Aliased versions. Le montrer en direct.");
     txt(s, "Suivi : tous les essais", { x: 0.6, y: 1.5, w: 5, h: 0.35, fontSize: 16, bold: true, color: C.accent6 });
     for (let i = 0; i < 6; i++) box(s, 0.6 + (i % 3) * 1.75, 1.95 + Math.floor(i / 3) * 0.75, 1.6, 0.6, `run ${i + 1}`, null, "file", { size: 13 });
     arrow(s, 5.85, 2.55, 6.6, 2.55, { color: C.accent1, label: "promote", ldy: -0.32 });

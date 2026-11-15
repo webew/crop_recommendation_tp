@@ -693,6 +693,10 @@ add(H2("Le registre de modèles"))
 add(P(
     "Le **suivi** garde *tous* les essais. Le **registre** ne garde que les modèles que l'on a décidé de conserver, sous un nom (`crop-recommendation`) et avec des **versions** numérotées (1, 2, 3…). Un **alias** est une étiquette mobile posée sur une version : `@champion` désigne le modèle en service.",
 ))
+add(BOX("warn", P(
+    "L'interface de MLflow 3 appelle « modèles » deux choses différentes. Dans une **expérience**, l'onglet *Models* liste les modèles enregistrés par les runs (un par `uv run train`) : ce sont des résultats d'entraînement, et ils n'ont **jamais** d'alias. Le **registre** se trouve ailleurs, dans *Model registry* (barre de navigation de gauche) : on y voit `crop-recommendation`, ses versions et, dans la colonne *Aliased versions*, `@champion`.",
+    "`promote` fait le lien entre les deux : il copie le modèle d'un run comme nouvelle version du registre, puis lui donne l'alias.",
+), "Attention : deux pages « Models »"))
 add(BOX("why", P(
     "L'API ne demande pas « la version 3 », mais « le **champion** ». Changer de modèle en service revient à **déplacer l'alias** : l'API n'a pas besoin d'être modifiée. MLflow proposait autrefois des *stages* fixes (Staging, Production) ; ils sont dépréciés au profit des alias, plus souples.",
 )))
